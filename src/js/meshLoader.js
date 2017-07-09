@@ -1,3 +1,4 @@
+/* global THREE */
 /**
  * pocket.gl - A fully customizable webgl shader sandbox to embed in your pages - http://pocket.gl
  *
@@ -16,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 define(
 	[
 		"app/utils",
@@ -28,11 +29,11 @@ define(
 
 	function(Utils) {
 
-		function MeshLoader(mesh, material, baseURL, loadingManager, onLoaded) { 
+		function MeshLoader(mesh, material, baseURL, loadingManager, onLoaded) {
 			this.mesh = mesh;
 			this.material = material;
 			if(material) {
-				this.material.side =  mesh.doubleSided ? THREE.DoubleSide : THREE.FrontSide;
+				this.material.side = mesh.doubleSided ? THREE.DoubleSide : THREE.FrontSide;
 				this.material.transparent = mesh.transparent;
 			}
 			this.baseURL = baseURL;
@@ -49,11 +50,11 @@ define(
 
 			// Procedural mesh
 			if(this.mesh.type !== undefined) {
-				procMesh = this.createProceduralMesh(
-					this.mesh, 
-					this.material != undefined 
-					? this.material 
-					: new THREE.MeshPhongMaterial( { 
+				var procMesh = this.createProceduralMesh(
+					this.mesh,
+					this.material != undefined
+					? this.material
+					: new THREE.MeshPhongMaterial( {
 						color: 0xaa0000, specular: 0x220000, shininess: 40, shading: THREE.SmoothShading,
 						side: this.mesh.doubleSided ? THREE.DoubleSide : THREE.FrontSide,
 						transparent: this.mesh.transparent})
@@ -72,32 +73,32 @@ define(
 				function() {
 					// set materials
 					console.log("Mesh loading complete!");
-
+					var m;
 					if(_this.materials.length <= 1) {
-						var m = undefined;
-						if(_this.materials.length == 0) 
-							m = _this.material; 
-						else 
+
+						if(_this.materials.length == 0)
+							m = _this.material;
+						else
 							m = _this.createMaterial(_this.materials[0]);
 
 						_this.loadedMesh.traverse( function ( child ) {
 							if ( child instanceof THREE.Mesh )
-								child.material = m;						
+								child.material = m;
 						} );
 					}
 					else {
-						var multiMaterials = [];
+						var i, multiMaterials = [];
 
-						for(i in _this.materials) 
+						for(i in _this.materials)
 							multiMaterials.push(_this.createMaterial(_this.materials[i]));
 
-						for(var i in _this.loadedMesh.children) {
-							var m = i < multiMaterials.length ? multiMaterials[i] : multiMaterials[multiMaterials.length-1];
+						for(i in _this.loadedMesh.children) {
+							m = i < multiMaterials.length ? multiMaterials[i] : multiMaterials[multiMaterials.length-1];
 
 							_this.loadedMesh.children[i].material = m;
 						}
 					}
-					
+
 					_this.setObjectTransform(_this.loadedMesh, _this.mesh);
 
 					if(_this.onLoaded != undefined) _this.onLoaded(_this.loadedMesh);
@@ -109,12 +110,12 @@ define(
 				for(var i in this.mesh.materials) {
 					var m = this.mesh.materials[i];
 
-					this.materials.push(m);					
+					this.materials.push(m);
 					if(m.diffuseMap != undefined)
-						this.materials[i].diffuseMap = this.loadTexture(this.baseURL + m.diffuseMap);	
+						this.materials[i].diffuseMap = this.loadTexture(this.baseURL + m.diffuseMap);
 
 					if(m.normalMap != undefined)
-						this.materials[i].normalMap = this.loadTexture(this.baseURL + m.normalMap);				
+						this.materials[i].normalMap = this.loadTexture(this.baseURL + m.normalMap);
 				}
 			}
 
@@ -125,11 +126,11 @@ define(
 				this.LoadingManager.addObject(loader);
 				loader.options.convertUpAxis = true;
 				loader.load(
-					meshurl, 
+					meshurl,
 					function ( collada ) {
 						_this.LoadingManager.onProgress(loader, 1);
 
-						dae = collada.scene;
+						var dae = collada.scene;
 
 						dae.traverse( function ( child ) {
 							if ( child instanceof THREE.Mesh ) {
@@ -140,7 +141,7 @@ define(
 						_this.setObjectTransform(dae, _this.mesh);
 						_this.loadedMesh = dae;
 						if(_this.onLoaded != undefined) _this.onLoaded(dae);
-					}, 
+					},
 					function ( xhr ) {
 						if ( xhr.lengthComputable ) {
 							var percentComplete = xhr.loaded / xhr.total;
@@ -151,10 +152,10 @@ define(
 				);
 			}
 			else if(Utils.endsWith(meshurl.toLowerCase(), ".obj")) {
-				var loader = new THREE.OBJLoader();
+				loader = new THREE.OBJLoader();
 				this.LoadingManager.addObject(loader);
 				loader.load(
-					meshurl, 
+					meshurl,
 					function( object ) {
 						_this.LoadingManager.onProgress(loader, 1);
 
@@ -177,14 +178,14 @@ define(
 					function(xhr) { _this.LoadingManager.onError(xhr); }
 				);
 			}
-		}
+		};
 
 		MeshLoader.prototype.createMaterial = function(params) {
 			var color    = params.color != undefined 	? params.color 		: 0xaaaaaa;
 			var specular = params.specular != undefined ? params.specular 	: 0x222222;
 			var shininess= params.shininess != undefined ? params.shininess 	: 100;
 
-			var mdata = { 
+			var mdata = {
 				color: color, specular: specular, shininess: shininess, side: this.mesh.doubleSided ? THREE.DoubleSide : THREE.FrontSide,
 				transparent: this.mesh.transparent
 			};
@@ -193,7 +194,7 @@ define(
 			if(params.normalMap)  mdata.normalMap = params.normalMap;
 
 			return new THREE.MeshPhongMaterial(mdata);
-		}
+		};
 
 		MeshLoader.prototype.loadTexture = function(url) {
 			var _this = this;
@@ -205,23 +206,23 @@ define(
 				url,
 
 				function(loader) {
-					return function (texture) {
+					return function () {
 						_this.LoadingManager.onProgress(loader, 1);
-					}
+					};
 				}(loader),
-				
+
 				function(loader) {
 					return function ( xhr ) {
 						if ( xhr.lengthComputable ) {
 							var percentComplete = xhr.loaded / xhr.total;
-							console.log( Math.round(percentComplete * 100, 2) + '% downloaded' );
+							console.log( Math.round(percentComplete * 100, 2) + "% downloaded" );
 							_this.LoadingManager.onProgress(loader, percentComplete);
 						}
-					}
+					};
 				}(loader),
-				function(xhr) { _this.LoadingManager.onError(xhr) }
+				function(xhr) { _this.LoadingManager.onError(xhr); }
 			);
-		}
+		};
 
 		MeshLoader.prototype.createProceduralMesh = function(mesh, material) {
 			var geometry = null;
@@ -255,14 +256,14 @@ define(
 
 				case "plane":
 					if(mesh.subdivision === undefined) mesh.subdivision = 1;
-					var geometry = new THREE.PlaneGeometry(60, 60, mesh.subdivision, mesh.subdivision);
+					geometry = new THREE.PlaneGeometry(60, 60, mesh.subdivision, mesh.subdivision);
 					break;
 
 				case "teapot":
 				default:
 					if(mesh.subdivision === undefined || mesh.subdivision <= 1) mesh.subdivision = 6;
 					if(mesh.subdivision > 10) mesh.subdivision = 10;
-					geometry = new THREE.TeapotBufferGeometry( 
+					geometry = new THREE.TeapotBufferGeometry(
 						25,
 						mesh.subdivision,
 						true, true, true, false, true);
@@ -270,7 +271,7 @@ define(
 			}
 
 			return new THREE.Mesh(geometry, material);
-		}
+		};
 
 		MeshLoader.prototype.setObjectTransform = function(obj, params) {
 			if(params.scale == undefined) params.scale = 1;
@@ -291,7 +292,7 @@ define(
 			obj.rotation.x = params.rx * 3.1415926 / 180;
 			obj.rotation.y = params.ry * 3.1415926 / 180;
 			obj.rotation.z = params.rz * 3.1415926 / 180;
-		}
+		};
 
 		return MeshLoader;
 	}
