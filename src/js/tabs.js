@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 define([
 		"app/utils"
 	],
@@ -49,13 +49,13 @@ define([
 			a.addEventListener("click", (function (tab, index) {
 					return function(event) {
 						_this.switchTab(event, tab, index);
-					}
-				})(a, this.tabIDs[i]) 
+					};
+				})(a, this.tabIDs[i])
 			);
 
 			tabs[this.tabIDs[i]] = a;
 		}
-		
+
 		div.appendChild(ul);
 
 		var divHl = document.createElement("div");
@@ -64,7 +64,7 @@ define([
 		divHl.style.left = "0px";
 		divHl.style.backgroundColor = tabColor;
 
-		div.appendChild(divHl);	
+		div.appendChild(divHl);
 
 		this.container.appendChild(div);
 
@@ -72,7 +72,7 @@ define([
 		this.tabs = tabs;
 
 		this.currentTab = tabs["render"];
-		
+
 		this.refresh();
 	}
 
@@ -80,15 +80,13 @@ define([
 		var containerSize = Utils.getElementSize(this.container);
 		this.setTabNames(containerSize.width);
 		this.repositionHighlight(this.currentTab);
-	}
+	};
 
 	PocketGLTabs.prototype.setTabNames = function(size) {
 		var tabNamesBig = ["Render", "Vertex Shader", "Fragment Shader"];
 		var tabNamesSmall = ["Render", "Vertex", "Fragment"];
 		var tabNamesXSmall = ["Rnd", "Vtx", "Frag"];
-		var tabNames;
-
-		tabNames = size < 340 ? tabNamesXSmall : size < 450 ? tabNamesSmall : tabNamesBig;
+		var tabNames = size < 340 ? tabNamesXSmall : size < 450 ? tabNamesSmall : tabNamesBig;
 
 		for(var i in this.tabIDs) {
 			var id = this.tabIDs[i];
@@ -96,7 +94,7 @@ define([
 
 			this.tabs[this.tabIDs[i]].innerHTML = tabNames[i];
 		}
-	}
+	};
 
 	PocketGLTabs.prototype.switchTab = function(event, tab, index) {
 		event.preventDefault();
@@ -107,9 +105,8 @@ define([
 	};
 
 	PocketGLTabs.prototype.repositionHighlight = function(tab) {
-		var position;
-		position = Utils.getElementSize(tab);
-		container = Utils.getElementSize(this.tabs["render"]);
+		var position = Utils.getElementSize(tab);
+		var container = Utils.getElementSize(this.tabs["render"]);
 		return this.setStyles(this.hl, {
 			left: (position.left - container.left) + "px",
 			width: position.width + "px"
@@ -117,9 +114,8 @@ define([
 	};
 
 	PocketGLTabs.prototype.setStyles = function(element, styles) {
-		var key, results;
-		results = [];
-		
+		var key, results = [];
+
 		for (key in styles) {
 			results.push(element.style[key] = styles[key]);
 		}
