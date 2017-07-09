@@ -16,14 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 define(function() {
-	LoadingManager = function(domEl, onComplete)
+	var LoadingManager = function(domEl, onComplete)
 	{
 		this.domEl = domEl;
 		this.onComplete = onComplete;
 		this.reset();
-	}
+	};
 
 	LoadingManager.prototype = {
 		constructor: LoadingManager,
@@ -36,7 +36,7 @@ define(function() {
 		},
 
 		addObject: function(object) {
-			this.objects.push({obj: object, progress: 0});			
+			this.objects.push({obj: object, progress: 0});
 		},
 
 		onProgress: function(object, progress) {
@@ -44,7 +44,7 @@ define(function() {
 
 			console.log("onProgress " + progress);
 
-			for(i in this.objects) {
+			for(var i in this.objects) {
 				var obj = this.objects[i];
 				if(object != obj.obj) continue;
 
@@ -66,7 +66,7 @@ define(function() {
 			var scope = this;
 			var progress = 0;
 
-			for(i in this.objects) {
+			for(var i in this.objects) {
 				var obj = this.objects[i];
 
 				progress += obj.progress;
@@ -77,13 +77,13 @@ define(function() {
 			this.setProgress(progress);
 
 			if(progress == 1 && this.ready) {
-				setTimeout(function() { 					
+				setTimeout(function() {
 					if(scope.extraOnComplete) {
 						scope.extraOnComplete();
 						scope.extraOnComplete = undefined;
 					}
 
-					scope.onComplete(); 
+					scope.onComplete();
 				}, 100);
 
 				this.reset();
@@ -104,9 +104,9 @@ define(function() {
 		},
 
 		setExtraCompleteCallback: function(callback) {
-			this.extraOnComplete= callback; // will be reset after call
+			this.extraOnComplete = callback; // will be reset after call
 		}
-	}
+	};
 
 	return LoadingManager;
 });
