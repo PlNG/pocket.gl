@@ -16,13 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 define([
 	"app/dirtyHack",
-	//"three_builds/three", // the dirtyHack module will load the three module
+	// "three_builds/three", // the dirtyHack module will load the three module
 
 	"text!src/css/style.css",
-	
+
 	"text!src/default_shaders/vertex.glsl",
 	"text!src/default_shaders/fragment.glsl",
 
@@ -35,7 +35,7 @@ define([
 	"clipboard",
 
 	"three_examples/Detector",
-	"three_examples/controls/OrbitControls",	
+	"three_examples/controls/OrbitControls",
 
 	"dat_gui/dat.gui",
 
@@ -47,9 +47,9 @@ define([
 
 		// Inject css
 		var sheet = document.createElement("style");
-		sheet.setAttribute("media", "screen")	
+		sheet.setAttribute("media", "screen");
 		sheet.appendChild(document.createTextNode(stylesheet));
-	    document.head.appendChild(sheet);
+		document.head.appendChild(sheet);
 
 		function PocketGL(containerIDorDomEl, params, baseURL)
 		{
@@ -60,7 +60,7 @@ define([
 
 			if(params == undefined) params = {};
 
-			if(typeof params === 'string' || params instanceof String)
+			if(typeof params === "string" || params instanceof String)
 			{
 				if(baseURL == undefined) {
 					var lastSlash = params.lastIndexOf("/");
@@ -70,12 +70,12 @@ define([
 						: params.substring(0, lastSlash);
 				}
 				var loaderV = new THREE.FileLoader();
-				loaderV.load( 
-					params, 
-					function(text) { 
+				loaderV.load(
+					params,
+					function(text) {
 						eval("params = " + text);
-			            scope.initObject(containerIDorDomEl, params, baseURL);  
-			        }
+						scope.initObject(containerIDorDomEl, params, baseURL);
+					}
 				);
 			}
 			else {
@@ -87,19 +87,19 @@ define([
 		{
 			var scope = this;
 
-			this.domContainer = 
-				(typeof containerIDorDomEl === 'string' || containerIDorDomEl instanceof String) 
-				? document.getElementById(containerIDorDomEl) 
+			this.domContainer =
+				(typeof containerIDorDomEl === "string" || containerIDorDomEl instanceof String)
+				? document.getElementById(containerIDorDomEl)
 				: containerIDorDomEl;
 
 			this.domContainer.className += " pocketgl";
 
 			this.baseURL = baseURL == undefined ? "" : baseURL;
-			if(this.baseURL != "" && this.baseURL[this.baseURL.length-1] != "/") this.baseURL += "/";
+			if(this.baseURL != "" && this.baseURL[this.baseURL.length - 1] != "/") this.baseURL += "/";
 
-			if( ! this.readParams(params)) return;
+			if( !this.readParams(params) ) return;
 
-			if ( ! Detector.webgl ) {
+			if ( !Detector.webgl ) {
 				this.domContainer.style.border = "1px solid #aaa";
 				this.domContainer.style.backgroundColor = "#fff";
 
@@ -118,7 +118,7 @@ define([
 
 			this.clock = new THREE.Clock();
 
-			this.frameCount = 0;			
+			this.frameCount = 0;
 
 			if(params.vertexShaderFile != undefined || params.fragmentShaderFile != undefined) {
 				this.showLoading();
@@ -127,9 +127,9 @@ define([
 				if(params.vertexShaderFile != undefined) {
 					var loaderV = new THREE.FileLoader();
 					this.LoadingManager.addObject(loaderV);
-					loaderV.load( 
-						this.baseURL + params.vertexShaderFile, 
-						function(text) { params.vertexShader = text;  },
+					loaderV.load(
+						this.baseURL + params.vertexShaderFile,
+						function(text) { params.vertexShader = text; },
 						function ( xhr ) {
 							if ( xhr.lengthComputable ) {
 								var percentComplete = xhr.loaded / xhr.total;
@@ -143,8 +143,8 @@ define([
 				if(params.fragmentShaderFile != undefined) {
 					var loader = new THREE.FileLoader();
 					this.LoadingManager.addObject(loader);
-					loader.load( 
-						this.baseURL + params.fragmentShaderFile, 
+					loader.load(
+						this.baseURL + params.fragmentShaderFile,
 						function(text) { params.fragmentShader = text; scope.LoadingManager.onProgress(loader, 1); },
 						function ( xhr ) {
 							if ( xhr.lengthComputable ) {
@@ -162,15 +162,15 @@ define([
 				this.loadingShaders = false;
 
 				this.init();
-			}		
-		}
+			}
+		};
 
 		PocketGL.prototype.readParams = function(params)
 		{
 			if(params == undefined) params = {};
 			if(params.meshes == undefined) params.meshes = [];
 
-			// fluidWidth is true by default, but if only width is defined, it overrides the fluidWidth 
+			// fluidWidth is true by default, but if only width is defined, it overrides the fluidWidth
 			if(params.width != undefined && params.fluidWidth == undefined)
 				params.fluidWidth = false;
 
@@ -178,7 +178,7 @@ define([
 			if(params.autoOrbit == true)
 				params.animated = true;
 
-			for(id in config)
+			for(var id in config)
 				if(params[id] == undefined) params[id] = config[id];
 
 			this.shaderEditorEnabled = true;
@@ -219,14 +219,14 @@ define([
 			this.params = params;
 
 			return true;
-		}
+		};
 
 		PocketGL.prototype.createDomElements = function()
 		{
 			var scope = this;
 
 			// Tabs
-			if(this.shaderEditorEnabled && this.params.showTabs) 				
+			if(this.shaderEditorEnabled && this.params.showTabs)
 				this.tabs = new PocketGLTabs(this.domContainer, this.params.tabColor, this.params.tabTextColor, !this.fragmentOnly, function (view) { scope.switchView(view); });
 
 			if(!this.params.fluidWidth) {
@@ -239,16 +239,16 @@ define([
 				var id = this.containerNames[i];
 
 				this.containers[id] = document.createElement("div");
-				
-				if(i > 0) this.containers[id].style.display = "none";
-				
 
-				if(!this.params.fluidWidth)  
+				if(i > 0) this.containers[id].style.display = "none";
+
+
+				if(!this.params.fluidWidth)
 					this.containers[id].style.width  = this.params.width + "px";
-				else { 
+				else {
 					// Fluid layout
 					this.params.width = Utils.getElementSize(this.domContainer).width;
-					window.addEventListener( 'resize', function() { scope.onWindowResize(); }, false );
+					window.addEventListener( "resize", function() { scope.onWindowResize(); }, false );
 				}
 
 				this.containers[id].style.height = this.params.height + "px";
@@ -262,7 +262,7 @@ define([
 			// Loading Manager progress bar
 			this.containers.loading.className = "loadingProgress";
 
-			this.containers.loading.innerHTML = 
+			this.containers.loading.innerHTML =
 				"<div class='pocketglProgress'><div class='pocketglProgressBar'></div></div>";
 
 			var progressBar = this.containers.loading.getElementsByTagName("div")[1];
@@ -270,7 +270,7 @@ define([
 				progressBar,
 				function() { scope.onLoadingComplete(); }
 			);
-		}
+		};
 
 		PocketGL.prototype.onWindowResize = function() {
 			if(Utils.isFullscreen()) return;
@@ -293,11 +293,11 @@ define([
 			if(this.currentmesh != undefined) {
 				var scale = 1;
 
-				if(containerSize.width < this.params.height)		
+				if(containerSize.width < this.params.height)
 					scale = containerSize.width / this.params.height;
 
-				this.currentmesh.scale.x = 
-				this.currentmesh.scale.y = 
+				this.currentmesh.scale.x =
+				this.currentmesh.scale.y =
 				this.currentmesh.scale.z = this.currentmesh.baseScale * scale;
 			}
 
@@ -305,11 +305,11 @@ define([
 
 			// repositioning and resizing tab cursor
 			if(this.tabs) this.tabs.refresh();
-		}
+		};
 
 		PocketGL.prototype.onLoadingComplete = function()
 		{
-			//console.log("loading complete");
+			// console.log("loading complete");
 
 			if(this.loadingShaders) {
 				this.loadingShaders = false;
@@ -317,10 +317,10 @@ define([
 			}
 			else
 				this.switchView("render");
-		}
+		};
 
-		// Will add a cubemap based skybox or equrectangular based skybox, depending on the param skybox
-		PocketGL.prototype.addSkybox = function() 
+		// Will add a cubemap based skybox or equirectangular based skybox, depending on the param skybox
+		PocketGL.prototype.addSkybox = function()
 		{
 			// if the param skybox is a string (equirectangular skybox case) transform it into an array of one element
 			// so that the next code, based on an array of strings can process it
@@ -331,6 +331,10 @@ define([
 
 			var urls = [];
 
+			var mesh;
+			var loader;
+			var material;
+
 			for(var i in this.params.skybox)
 				urls[i] = this.baseURL + this.params.skybox[i];
 
@@ -338,11 +342,11 @@ define([
 			if(urls.length == 1) {
 				this.showLoading();
 
-				var loader = new THREE.TextureLoader();
+				loader = new THREE.TextureLoader();
 				this.LoadingManager.addObject(loader);
-				
-				var equirectangularTexture = loader.load( 
-					urls[0], 
+
+				var equirectangularTexture = loader.load(
+					urls[0],
 					function() { scope.LoadingManager.onProgress(loader, 1); },
 					function ( xhr ) {
 						if ( xhr.lengthComputable ) {
@@ -356,16 +360,16 @@ define([
 
 				equirectangularTexture.wrapS = THREE.ClampToEdgeWrapping;
 				equirectangularTexture.wrapT = THREE.ClampToEdgeWrapping;
-				equirectangularTexture.minFilter = equirectangularTexture.magFilter =THREE.LinearFilter;
+				equirectangularTexture.minFilter = equirectangularTexture.magFilter = THREE.LinearFilter;
 
 				// Map the equirectangular texture to a sphere centered on the camera
 				var geometry = new THREE.SphereGeometry( 500, 60, 40 );
 
 				// need to flip x: face up will flip to backside (don't need for backside on material)
 				// and texture orientation will look correctly
-				geometry.scale( - 1, 1, 1 ); 
+				geometry.scale( -1, 1, 1 );
 
-				var material = new THREE.MeshBasicMaterial( {
+				material = new THREE.MeshBasicMaterial( {
 					map: equirectangularTexture
 				} );
 
@@ -374,16 +378,16 @@ define([
 				this.skybox = mesh;
 				this.scene.add( mesh );
 
-				this.uniforms["tEquirect"] = { type:"t", value: equirectangularTexture };
+				this.uniforms["tEquirect"] = { type: "t", value: equirectangularTexture };
 			}
 			// more than one texture, cubemapped skybox
 			else {
 				this.showLoading();
-				
-				var loader = new THREE.CubeTextureLoader();
+
+				loader = new THREE.CubeTextureLoader();
 				this.LoadingManager.addObject(loader);
 
-				var textureCube = loader.load( 
+				var textureCube = loader.load(
 					urls,
 
 					function() { scope.LoadingManager.onProgress(loader, 1); },
@@ -397,41 +401,41 @@ define([
 				);
 				this.LoadingManager.setReady();
 
-				var shader = THREE.ShaderLib[ "cube" ];
+				var shader = THREE.ShaderLib["cube"];
 				// need to clone the shader.uniforms, otherwise all the cubemaps will share the same uniform object
 				var uniforms = Utils.cloneObj(shader.uniforms);
 				uniforms["tCube"].value = textureCube;
 				uniforms["tFlip"].value = -1; // texture flipping, positive x is leftside
 
-				var material = new THREE.ShaderMaterial( {
+				material = new THREE.ShaderMaterial( {
 
 					fragmentShader: shader.fragmentShader,
 					vertexShader: shader.vertexShader,
 					uniforms: uniforms,
 					side: THREE.BackSide
 
-				} ),
+				} );
 
 				mesh = new THREE.Mesh( new THREE.BoxGeometry( 1000, 1000, 1000 ), material );
 				this.skybox = mesh;
 				this.scene.add( mesh );
 
-				this.uniforms["tCube"] = { type:"t", value: textureCube };
+				this.uniforms["tCube"] = { type: "t", value: textureCube };
 			}
-		}
+		};
 
 		PocketGL.prototype.addCopyButtons = function() {
 			var scope = this;
 
 			var buttons = document.createElement("div");
 			buttons.className = "pocketgl-copyButtons";
-			buttons.style.display = "none";			
+			buttons.style.display = "none";
 
 			var copyButton = document.createElement("button");
 			copyButton.className = "pocketgl-copyButton";
 			copyButton.innerHTML = "copy";
 
-			copyButton.title = "Copy to clipboard";			
+			copyButton.title = "Copy to clipboard";
 
 			var copyButtonJS = document.createElement("button");
 			copyButtonJS.className = "pocketgl-copyButton";
@@ -449,17 +453,17 @@ define([
 			this.copyButtonJS = copyButtonJS;
 
 			this.clipboard = new Clipboard(copyButton, {
-			    text: function(trigger) {
-			        return scope.getEditorText(false);
-			    }
+				text: function() {
+					return scope.getEditorText(false);
+				}
 			});
 
 			this.clipboardJS = new Clipboard(copyButtonJS, {
-			    text: function(trigger) {
-			        return scope.getEditorText(true);
-			    }
+				text: function() {
+					return scope.getEditorText(true);
+				}
 			});
-		}
+		};
 
 		PocketGL.prototype.addCopyright = function(domElement) {
 			if(this.params.copyright == "") return;
@@ -470,7 +474,7 @@ define([
 
 			var copyright = document.createElement("div");
 			copyright.innerHTML = this.params.copyright;
-			copyright.className =  className + " pocketgl-copyright pocketgl";
+			copyright.className = className + " pocketgl-copyright pocketgl";
 			copyright.style.color = this.params.copyrightColor;
 
 			var style = document.createElement("style");
@@ -483,21 +487,21 @@ define([
 
 			domElement.appendChild(copyright);
 			domElement.appendChild(style);
-		}
+		};
 
 		PocketGL.prototype.getEditorText = function(jsFormat) {
 			var text;
 
-			if(this.currentView == "vertex_shader" && this.editorVertex) 
+			if(this.currentView == "vertex_shader" && this.editorVertex)
 				text = this.editorVertex.getValue();
 
-			if(this.currentView == "fragment_shader" && this.editorFragment) 
+			if(this.currentView == "fragment_shader" && this.editorFragment)
 				text = this.editorFragment.getValue();
 
 			if(text == undefined) return;
 
 			return jsFormat ? Utils.toJSString(text) : text;
-		}
+		};
 
 		PocketGL.prototype.addPlayButtons = function(domElement)
 		{
@@ -509,7 +513,7 @@ define([
 			this.playButton.title = "Play";
 			this.playButton.className = "pocketgl-playbutton";
 			this.playButton.style.display = "none";
-			this.playButton.onclick = function() { scope.play(); return false; }
+			this.playButton.onclick = function() { scope.play(); return false; };
 
 			domElement.appendChild(this.playButton);
 
@@ -518,7 +522,7 @@ define([
 			this.pauseButton.innerHTML = " ";
 			this.pauseButton.title = "Pause";
 			this.pauseButton.className = "pocketgl-pausebutton";
-			this.pauseButton.onclick = function() { scope.pause(); return false; }
+			this.pauseButton.onclick = function() { scope.pause(); return false; };
 
 			domElement.appendChild(this.pauseButton);
 
@@ -527,10 +531,10 @@ define([
 			this.stopButton.innerHTML = " ";
 			this.stopButton.title = "Stop";
 			this.stopButton.className = "pocketgl-stopbutton";
-			this.stopButton.onclick = function() { scope.stop(); return false; }
+			this.stopButton.onclick = function() { scope.stop(); return false; };
 
 			domElement.appendChild(this.stopButton);
-		}
+		};
 
 		PocketGL.prototype.addFullscreenButton = function(domElement)
 		{
@@ -540,28 +544,29 @@ define([
 			fullscreenButton.title = "Fullscreen";
 			fullscreenButton.className = "pocketgl-fullscreenbutton";
 
-			fullscreenButton.onclick = function() { 
+			var scope = this;
+			fullscreenButton.onclick = function() {
 				scope.fullscreenMode = true;
 
 				// save windowed size
 				scope.windowedSize = Utils.getElementSize(scope.renderer.domElement);
 
 				// pause the animation while going fullscreen on iexplorer
-				if(document.msFullscreenEnabled) scope.pauseBeforeFullscreen(); 
+				if(document.msFullscreenEnabled) scope.pauseBeforeFullscreen();
 
 				Utils.goFullscreen(scope.renderer.domElement);
-				
-				return false; 
-			}
 
-			var scope = this;
-			document.addEventListener('mozfullscreenchange', function() { scope.onFullscreenChange(); } );
-			document.addEventListener('webkitfullscreenchange', function() { scope.onFullscreenChange(); } );
-			document.addEventListener('MSFullscreenChange', function() { scope.onFullscreenChange(); } );
-			document.addEventListener('fullscreenChange', function() { scope.onFullscreenChange(); } );
+				return false;
+			};
+
+
+			document.addEventListener("mozfullscreenchange", function() { scope.onFullscreenChange(); } );
+			document.addEventListener("webkitfullscreenchange", function() { scope.onFullscreenChange(); } );
+			document.addEventListener("MSFullscreenChange", function() { scope.onFullscreenChange(); } );
+			document.addEventListener("fullscreenChange", function() { scope.onFullscreenChange(); } );
 
 			domElement.appendChild(fullscreenButton);
-		}
+		};
 
 		PocketGL.prototype.getLogoDomEl = function()
 		{
@@ -573,11 +578,11 @@ define([
 			logo.innerHTML = "<div class='pocketgl-logo-pocket'></div>";
 
 			return logo;
-		}
+		};
 
 		PocketGL.prototype.onFullscreenChange = function()
 		{
-			if(! this.fullscreenMode) return;
+			if(!this.fullscreenMode) return;
 			if(!Utils.isFullscreen()) this.fullscreenMode = false;
 
 			var size;
@@ -603,19 +608,19 @@ define([
 
 			var scope = this;
 			if(this.params.animated)
-				window.setTimeout( 
-					function() { 
+				window.setTimeout(
+					function() {
 						scope.resumeAfterFullscreen();
 					}, 500);
-		}
+		};
 
 		PocketGL.prototype.switchView = function(view)
-		{			
+		{
 			if(this.containers[view] == undefined) return;
 			if(!Utils.isFullscreen()) this.fullscreenMode = false;
 
 			if(view == this.currentView) return;
-			
+
 			this.containers[this.currentView].style.display = "none";
 			this.containers[view].style.display   = "block";
 
@@ -635,9 +640,9 @@ define([
 					}
 
 					if(!Utils.mobileAndTabletcheck())
-						this.editorVertex.focus();	
+						this.editorVertex.focus();
 
-					if(this.copyButtons) 
+					if(this.copyButtons)
 						this.copyButtons.style.display = "block";
 					break;
 
@@ -646,7 +651,7 @@ define([
 						this.editorFragment = this.createEditor(this.containers["fragment_shader"], this.params.fragmentShader);
 						if(this.params.fluidWidth) this.containers[view].style.width = "";
 					}
-	
+
 					if(!Utils.mobileAndTabletcheck())
 						this.editorFragment.focus();
 
@@ -658,10 +663,10 @@ define([
 					if(this.tabs != undefined) this.tabs.disable();
 					break;
 
-				deafult:
+				default:
 					break;
 			}
-		}
+		};
 
 		PocketGL.prototype.createEditor = function(container, text)
 		{
@@ -675,12 +680,12 @@ define([
 			editor.getSession().setUseWrapMode(this.params.editorWrap);
 
 			return editor;
-		}
+		};
 
 		PocketGL.prototype.updateUniforms = function() {
 			if(!this.uniforms) return;
 
-			if(this.uniforms.time != undefined && this.params.animated && this.isPlaying()) 
+			if(this.uniforms.time != undefined && this.params.animated && this.isPlaying())
 				this.uniforms.time.value += this.clock.getDelta();
 
 			function update(u, scope) {
@@ -692,18 +697,18 @@ define([
 					scope.uniforms[u.name].value = scope.GUIParams[u.GUIName] ? 1 : 0;
 			}
 
-			for(uniformid in this.params.uniforms) {
+			for(var uniformid in this.params.uniforms) {
 				var u = this.params.uniforms[uniformid];
 
 				if(u.length == undefined)
 					update(u, this);
-				else for(var i=1; i<u.length; i++) 
-					update(u[i], this);				
+				else for(var i = 1; i < u.length; i++)
+					update(u[i], this);
 			}
-		}
+		};
 
-		PocketGL.prototype.play = function() {		
-			if(! this.params.animated || ! this.loaded) return;
+		PocketGL.prototype.play = function() {
+			if(!this.params.animated || !this.loaded) return;
 
 			this.clock.start();
 
@@ -713,18 +718,18 @@ define([
 			this.playButton.style.display = "none";
 
 			this.animate();
-		}
+		};
 
 		PocketGL.prototype.isPlaying = function() {
-			return 	this.params.animated   && 
-					!this.animationStopped && 
-					!this.animationPaused  && 
-					!this.stoppedByError   && 
+			return   this.params.animated  &&
+					!this.animationStopped &&
+					!this.animationPaused  &&
+					!this.stoppedByError   &&
 					!this.pausedBeforeFullscreen;
-		}
+		};
 
 		PocketGL.prototype.stop = function() {
-			if(! this.params.animated || ! this.loaded) return;
+			if(!this.params.animated || !this.loaded) return;
 
 			// reset time
 			if(this.uniforms && this.uniforms.time != undefined) {
@@ -739,59 +744,59 @@ define([
 			this.playButton.style.display = "block";
 
 			this.render();
-		}
+		};
 
 		PocketGL.prototype.errorStop = function() {
-			if(! this.params.animated) return;
+			if(!this.params.animated) return;
 
 			this.stoppedByError = true;
-		}
+		};
 
 		PocketGL.prototype.errorResume = function() {
-			if(! this.params.animated || !this.stoppedByError) return;
+			if(!this.params.animated || !this.stoppedByError) return;
 
 			this.stoppedByError = false;
 
 			if(this.isPlaying())
 				this.play();
-		}
+		};
 
 		PocketGL.prototype.pauseBeforeFullscreen = function() {
-			if(! this.params.animated) return;
+			if(!this.params.animated) return;
 
 			this.pausedBeforeFullscreen = true;
-		}
+		};
 
 		PocketGL.prototype.resumeAfterFullscreen = function() {
-			if(! this.params.animated || !this.pausedBeforeFullscreen) return;
+			if(!this.params.animated || !this.pausedBeforeFullscreen) return;
 
 			this.pausedBeforeFullscreen = false;
 
 			if(this.isPlaying())
 				this.play();
-		}
+		};
 
 		PocketGL.prototype.pause = function() {
-			if(! this.params.animated || ! this.loaded)	 return;
+			if(!this.params.animated || !this.loaded) return;
 
 			this.animationPaused = true;
 			this.clock.stop();
 
 			this.pauseButton.style.display = "none";
 			this.playButton.style.display = "block";
-		}
+		};
 
-		PocketGL.prototype.animate = function() {			
+		PocketGL.prototype.animate = function() {
 			var _this = this;
 
 			if(this.isPlaying())
-				requestAnimationFrame(function () { _this.animate() });
+				requestAnimationFrame(function () { _this.animate(); });
 
 			if(this.params.autoOrbit)
 				this.cameraControls.update();
-			
+
 			this.render();
-		}
+		};
 
 		PocketGL.prototype.render = function() {
 			this.updateUniforms();
@@ -805,17 +810,17 @@ define([
 
 			this.frameCount++;
 
-			//console.log("render " + this.frameCount);
-		}
+			// console.log("render " + this.frameCount);
+		};
 
 		PocketGL.prototype.loadMesh = function(mesh, material) {
 			var scope = this;
 
 			// retrieve cached mesh
-			// if the quaternion propery is defined, the mesh has already been loaded
+			// if the quaternion property is defined, the mesh has already been loaded
 			if(mesh.quaternion) {
 				if (typeof this.currentmesh != "undefined")
-				   this.scene.remove(scope.currentmesh);
+					this.scene.remove(scope.currentmesh);
 
 				this.currentmesh = mesh;
 				this.scene.add(mesh);
@@ -830,17 +835,17 @@ define([
 				this.showLoading();
 			}
 
-			var loader = new MeshLoader(mesh, material, this.baseURL, this.LoadingManager, 
+			var loader = new MeshLoader(mesh, material, this.baseURL, this.LoadingManager,
 				function(loadedMesh) {
 					if (typeof scope.currentmesh != "undefined") {
-					   scope.scene.remove(scope.currentmesh);
+						scope.scene.remove(scope.currentmesh);
 					}
 
 					// save current scale
 					loadedMesh.baseScale = loadedMesh.scale.x;
 
 					// cache the mesh
-					for(i in scope.params.meshes) {
+					for(var i in scope.params.meshes) {
 						if(scope.params.meshes[i] == mesh)
 							scope.params.meshes[i] = loadedMesh;
 					}
@@ -856,7 +861,7 @@ define([
 					setTimeout(function() { scope.render(); }, 200);
 				}
 			);
-		}
+		};
 
 		PocketGL.prototype.updateShadersFromEditor = function() {
 			if(this.editorVertex != undefined)
@@ -868,32 +873,32 @@ define([
 					fragmentShader: this.editorFragment.getValue() });
 
 			this.currentMaterial.needsUpdate = true;
-			
+
 			this.render();
-		}
+		};
 
 		PocketGL.prototype.adjustLineNumbers = function(txt, offset) {
 			var result = [];
 
 			var rows = txt.split("\n");
-			for(var i in rows) {		
+			for(var i in rows) {
 				var lineNumber = /:([0-9]+):/i.exec(rows[i]);
-				if(lineNumber != null) {
-					var modifiedRow = rows[i].replace(/:([0-9]+):/i, " line: " + (lineNumber[1] - offset + 1)+ " ");
+				if(lineNumber !== null) {
+					var modifiedRow = rows[i].replace(/:([0-9]+):/i, " line: " + (lineNumber[1] - offset + 1) + " ");
 					result.push(modifiedRow);
 				}
 				else result.push(rows[i]);
 			}
 
 			return result.join("<br/>");
-		}
+		};
 
 		PocketGL.prototype.showLoading = function() {
 			this.switchView("loading");
-		}
+		};
 
 		PocketGL.prototype.logErrors = function() {
-			if(! this.shaderEditorEnabled) return;
+			if(!this.shaderEditorEnabled) return;
 
 			var errorMessage = "";
 
@@ -908,9 +913,9 @@ define([
 				programLog = this.currentMaterial.program.diagnostics.programLog.trim();
 				fragmentLog = this.currentMaterial.program.diagnostics.fragmentShader.log.trim();
 				vertexLog = this.currentMaterial.program.diagnostics.vertexShader.log.trim();
-				
+
 				// Fix for strange string value on chrome 57.0.2987.133
-				if(programLog.length==1 && programLog.charCodeAt(0) == 0) programLog = "";
+				if(programLog.length == 1 && programLog.charCodeAt(0) == 0) programLog = "";
 			}
 
 			if(fragmentLog != "" || vertexLog != "")
@@ -921,10 +926,10 @@ define([
 
 				errorMessage = programLog + "<br/><br/>";
 
-				if(vertexLog != "") 
+				if(vertexLog != "")
 					errorMessage += "Vertex Shader errors:<br/>" + vertexLog + "<br/><br/>";
 
-				if(fragmentLog != "") 
+				if(fragmentLog != "")
 					errorMessage += "Fragment Shader errors:<br/>" + fragmentLog;
 
 				this.switchView("errors");
@@ -934,7 +939,7 @@ define([
 			else this.errorResume();
 
 			this.containers.errors.innerHTML = errorMessage;
-		}
+		};
 
 		PocketGL.prototype.rotateCamera = function(pitch, yaw) {
 			var x = this.params.cameraDistance * Math.cos(pitch);
@@ -943,7 +948,7 @@ define([
 			this.camera.position.x = x * Math.sin(yaw);
 			this.camera.position.y = y;
 			this.camera.position.z = x * Math.cos(yaw);
-		}
+		};
 
 		PocketGL.prototype.onMouseDown = function(e) {
 			e.preventDefault();
@@ -955,34 +960,34 @@ define([
 			this.mouseRelativePosition = [this.uniforms.mouse.value.z, this.uniforms.mouse.value.w];
 
 			this.uniforms.mouse.value = new THREE.Vector4(e.offsetX, e.offsetY, this.mouseRelativePosition[0], this.mouseRelativePosition[1]);
-			//console.log(this.uniforms.mouse.value.x + ", " + this.uniforms.mouse.value.y, this.uniforms.mouse.value.z + ", " + this.uniforms.mouse.value.w);
-		}
+			// console.log(this.uniforms.mouse.value.x + ", " + this.uniforms.mouse.value.y, this.uniforms.mouse.value.z + ", " + this.uniforms.mouse.value.w);
+		};
 
 		PocketGL.prototype.onMouseMove = function(e) {
 			e.preventDefault();
 
 			if(this.mouseDragging) {
 				this.uniforms.mouse.value = new THREE.Vector4(
-					e.offsetX, 
-					e.offsetY, 
-					this.mouseRelativePosition[0] + e.offsetX - this.mouseClickPosition[0], 
+					e.offsetX,
+					e.offsetY,
+					this.mouseRelativePosition[0] + e.offsetX - this.mouseClickPosition[0],
 					this.mouseRelativePosition[1] + e.offsetY - this.mouseClickPosition[1]);
 
 				this.render();
-				//console.log(this.uniforms.mouse.value.x + ", " + this.uniforms.mouse.value.y, this.uniforms.mouse.value.z + ", " + this.uniforms.mouse.value.w);
+				// console.log(this.uniforms.mouse.value.x + ", " + this.uniforms.mouse.value.y, this.uniforms.mouse.value.z + ", " + this.uniforms.mouse.value.w);
 			}
-		}
+		};
 
-		PocketGL.prototype.onMouseUp = function(e) {
+		PocketGL.prototype.onMouseUp = function() {
 			this.mouseDragging = false;
-		}
+		};
 
 		PocketGL.prototype.init = function() {
 			var scope = this;
 
 			// Camera
 			if(!this.fragmentOnly) {
-				this.camera = new THREE.PerspectiveCamera( this.params.cameraFOV, this.params.width/this.params.height, 0.1, 1000 );
+				this.camera = new THREE.PerspectiveCamera( this.params.cameraFOV, this.params.width / this.params.height, 0.1, 1000 );
 				this.rotateCamera(Utils.deg2Rad(this.params.cameraPitch), Utils.deg2Rad(this.params.cameraYaw));
 			}
 			else {
@@ -1008,7 +1013,7 @@ define([
 				if(u.type == "boolean")
 					scope.uniforms[u.name] = {
 						type: "f",
-						value: u.type ? 1.0 : 0.0 
+						value: u.type ? 1.0 : 0.0
 					};
 				else if(u.type == "float")
 					scope.uniforms[u.name] = {
@@ -1018,7 +1023,7 @@ define([
 				else if(u.type == "integer")
 					scope.uniforms[u.name] = {
 						type: "f",
-						value: parseInt(u.value)
+						value: parseInt(u.value, 10)
 					};
 				else if(u.type == "color") {
 					scope.uniforms[u.name] = {
@@ -1028,12 +1033,15 @@ define([
 				}
 			}
 
+			var i;
+			var u;
+			var j;
 			if(this.params.uniforms != undefined) {
-				for(var i in this.params.uniforms) {
-					var u = this.params.uniforms[i];
+				for(i in this.params.uniforms) {
+					u = this.params.uniforms[i];
 
 					if(u.length != undefined) // folder
-						for(var j=1; j<u.length; j++) addUniform(u[j]);
+						for(j = 1; j < u.length; j++) addUniform(u[j]);
 					else
 						addUniform(u);
 				}
@@ -1041,7 +1049,7 @@ define([
 
 			// Textures
 			if(this.params.textures != undefined) {
-				for(var i in this.params.textures) {
+				for(i in this.params.textures) {
 					var texparams = this.params.textures[i];
 					this.uniforms[texparams.name] = { type: "t", value: null };
 
@@ -1056,24 +1064,24 @@ define([
 						function(loader) {
 							return function (texture) {
 								scope.LoadingManager.onProgress(loader, 1);
-							}
+							};
 						}(loader),
-						
+
 						function(loader) {
 							return function ( xhr ) {
 								if ( xhr.lengthComputable ) {
 									var percentComplete = xhr.loaded / xhr.total;
-									console.log( Math.round(percentComplete * 100, 2) + '% downloaded' );
+									console.log( Math.round(percentComplete * 100, 2) + "% downloaded" );
 									scope.LoadingManager.onProgress(loader, percentComplete);
 								}
-							}
+							};
 						}(loader),
 						function(xhr) { scope.LoadingManager.onError(xhr); }
 					);
 
 					texture.wrapS = texture.wrapT = texparams.wrap == "clamp" ? THREE.ClampToEdgeWrapping : THREE.RepeatWrapping;
-					if(texparams.filter == "nearest") texture.minFilter = texture.magFilter =THREE.NearestFilter;
-					//else texture.minFilter = texture.magFilter =THREE.LinearFilter;
+					if(texparams.filter == "nearest") texture.minFilter = texture.magFilter = THREE.NearestFilter;
+					// else texture.minFilter = texture.magFilter =THREE.LinearFilter;
 
 					this.uniforms[texparams.name].value = texture;
 				}
@@ -1083,10 +1091,11 @@ define([
 				this.addSkybox();
 
 			// Material
+			var material;
 			if(this.shaderEditorEnabled) {
-				var material = new THREE.ShaderMaterial( {
+				material = new THREE.ShaderMaterial( {
 					uniforms: this.uniforms,
-					vertexShader: this.params.vertexShader, fragmentShader: this.params.fragmentShader,					
+					vertexShader: this.params.vertexShader, fragmentShader: this.params.fragmentShader,
 					extensions: {
 						derivatives: true,
 						shaderTextureLOD: true
@@ -1097,20 +1106,20 @@ define([
 			}
 
 			// Renderer
-			this.renderer = new THREE.WebGLRenderer({ antialias: true });				
+			this.renderer = new THREE.WebGLRenderer({ antialias: true });
 			this.renderer.setPixelRatio( window.devicePixelRatio );
 			this.renderer.setSize(this.params.width, this.params.height);
 			this.renderer.setClearColor( this.params.backgroundColor );
-			//this.renderer.sortObjects = false;
+			// this.renderer.sortObjects = false;
 
 			if(this.fragmentOnly) {
 				this.renderer.domElement.addEventListener("mousedown", function(e) {scope.onMouseDown(e);});
 				this.renderer.domElement.addEventListener("mousemove", function(e) {scope.onMouseMove(e);});
-				this.renderer.domElement.addEventListener("mouseup", 	 function(e) {scope.onMouseUp(e);});
+				this.renderer.domElement.addEventListener("mouseup",   function(e) {scope.onMouseUp(e);});
 				this.renderer.domElement.addEventListener("mouseout",  function(e) {scope.onMouseUp(e);});
 			}
 
-			if(! this.shaderEditorEnabled) {
+			if(!this.shaderEditorEnabled) {
 				// Lights
 				scene.add( new THREE.AmbientLight( 0xcccccc ) );
 
@@ -1138,12 +1147,12 @@ define([
 				cameraControls.enableZoom   = this.params.zoom;
 				cameraControls.enableRotate = this.params.orbiting;
 				cameraControls.target.set( 0, 0, 0 );
-				cameraControls.addEventListener( 'change', function() { scope.render() } );
+				cameraControls.addEventListener( "change", function() { scope.render(); } );
 
 				this.cameraControls = cameraControls;
 			}
 
-			// Add webgl canvas renderer to DOM container	
+			// Add webgl canvas renderer to DOM container
 			this.containers.render.appendChild( this.renderer.domElement );
 			this.containers.render.appendChild(this.getLogoDomEl());
 			if(Utils.hasFullscreen()) this.addFullscreenButton(this.containers.render);
@@ -1156,7 +1165,7 @@ define([
 
 			this.addCopyright(this.containers.render);
 
-			// GUI	
+			// GUI
 			this.GUIParams = { Mesh: 0 };
 
 			function addGuiParams(u) {
@@ -1167,24 +1176,24 @@ define([
 					scope.GUIParams[u.GUIName] = u.value;
 				}
 				else if(u.type == "integer") {
-					scope.GUIParams[u.GUIName] = parseInt(u.value);
+					scope.GUIParams[u.GUIName] = parseInt(u.value, 10);
 				}
 			}
 
 			if(this.params.uniforms != undefined)
-				for(var i in this.params.uniforms) {
-					var u = this.params.uniforms[i];
+				for(i in this.params.uniforms) {
+					u = this.params.uniforms[i];
 
 					if(u.length == undefined) { // Not an array
 						addGuiParams(u);
 					}
 					else { // It's a folder (array). Let's add all its elements.
-						for(var j=1; j<u.length; j++) addGuiParams(u[j]);
+						for(j = 1; j < u.length; j++) addGuiParams(u[j]);
 					}
 				}
 
 			var meshes = {};
-			for(var i in this.params.meshes)
+			for(i in this.params.meshes)
 				meshes[this.params.meshes[i].name] = i;
 
 			var gui = false;
@@ -1194,8 +1203,8 @@ define([
 			}
 
 			if(this.params.meshes.length > 1)
-				gui.add(this.GUIParams, 'Mesh', meshes).onChange(function() {
-					scope.loadMesh(scope.params.meshes[scope.GUIParams['Mesh']], material);
+				gui.add(this.GUIParams, "Mesh", meshes).onChange(function() {
+					scope.loadMesh(scope.params.meshes[scope.GUIParams["Mesh"]], material);
 					scope.LoadingManager.setReady();
 				});
 			else if(this.params.meshes.length == 0) {
@@ -1205,17 +1214,17 @@ define([
 					scene.add( mesh );
 				}
 				else {
-					this.loadMesh({type:"teapot", doubleSided: true}, material);
+					this.loadMesh({type: "teapot", doubleSided: true}, material);
 				}
 			}
 
 			function addGuiData(u, gui) {
-				if(u.type == "float") 
-					gui.add(scope.GUIParams, u.GUIName, u.min, u.max).step((u.max - u.min)/100).onChange(function() {
+				if(u.type == "float")
+					gui.add(scope.GUIParams, u.GUIName, u.min, u.max).step((u.max - u.min) / 100).onChange(function() {
 						scope.render();
 					});
-				if(u.type == "integer") 
-					gui.add(scope.GUIParams, u.GUIName, parseInt(u.min), parseInt(u.max)).step(1).onChange(function() {
+				if(u.type == "integer")
+					gui.add(scope.GUIParams, u.GUIName, parseInt(u.min, 10), parseInt(u.max, 10)).step(1).onChange(function() {
 						scope.render();
 					});
 				else if(u.type == "color")
@@ -1228,12 +1237,12 @@ define([
 					});
 			}
 
-			for(var i in this.params.uniforms) {
-				var u = this.params.uniforms[i];
+			for(i in this.params.uniforms) {
+				u = this.params.uniforms[i];
 
 				if(u.length != undefined) {
 					var folder = gui.addFolder(u[0].groupName);
-					for(var j=1; j<u.length; j++) addGuiData(u[j], folder);	
+					for(j = 1; j < u.length; j++) addGuiData(u[j], folder);
 
 					if(u[0].opened) folder.open();
 				}
@@ -1241,7 +1250,7 @@ define([
 			}
 
 			if(gui) {
-				var guiContainer = document.createElement('div');
+				var guiContainer = document.createElement("div");
 				guiContainer.style.position = "absolute";
 				guiContainer.style.right = "0px";
 				guiContainer.style.top = "0px";
@@ -1267,7 +1276,7 @@ define([
 				this.play();
 			else
 				this.render();
-		}
+		};
 
 		return PocketGL;
 	}
